@@ -1,0 +1,36 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+import 'firebase_options.dart';
+import 'view/welcome_screen.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(const App());
+}
+
+class App extends StatelessWidget {
+  const App({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: WelcomeScreen(),
+    );
+  }
+}
+
+// Firebase phone authentication
+// A reels page that gets reels from an API call (db can be hosted anywhere, 
+//you can use firestore for simplicity), 10 reels at a time and a new api call should be 
+//made when the user reaches the last/second last reel. 
+//When making an API call, show a toast on the screen saying “making API call”. 
+//There should be 40-50 reels with the basic schema: title, description, videoLink, 
+//uid (user id of creator), nLikes (number of likes). And an option to like.
+// A user can like/dislike a reel but the like should not be counted n number of times. 
+//The video should play by default, on tapping it should go on mute and on holding 
+//the tap, it should pause and the description and title should be hidden
+// A screen to upload reels
