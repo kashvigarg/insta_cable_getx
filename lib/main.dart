@@ -1,5 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_cable/view/bottom_nav_bar.dart';
+import 'package:insta_cable/view/create_new_reel.dart';
+import 'package:insta_cable/view/upload_screen.dart';
 
 import 'firebase_options.dart';
 import 'view/welcome_screen.dart';
@@ -18,7 +21,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: WelcomeScreen(),
+      home: LandingScreen(),
     );
   }
 }

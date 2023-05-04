@@ -1,6 +1,9 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_cable/helpers/video_picker_helper.dart';
+import 'package:insta_cable/view/create_new_reel.dart';
 
 class UploadScreen extends StatelessWidget {
   const UploadScreen({super.key});
@@ -10,7 +13,16 @@ class UploadScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
           floatingActionButton: FloatingActionButton(
-            onPressed: () {},
+            onPressed: () async {
+              final videoFile = VideoPickerHelper.pickVideo();
+              if (videoFile == null) return;
+
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) =>
+                          CreateNewReelScreen(video: videoFile))));
+            },
             backgroundColor: Colors.greenAccent,
             child: const Icon(
               Icons.add,
