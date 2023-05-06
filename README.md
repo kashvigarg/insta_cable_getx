@@ -1,16 +1,34 @@
 # insta_cable
 
-A new Flutter project.
+A Flutter Video Sharing Application.
 
-## Getting Started
+## Live Testing 
+1. Try the live demo. 
+2. Watch a sample. 
 
-This project is a starting point for a Flutter application.
+## Dependencies
 
-A few resources to get you started if this is your first Flutter project:
+- `get`
+- `video_player`
+- `firebase_auth`
+- `cloud_firestore`
+- `firebase_storage` 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Local Development
+
+  ##### Clone the repository
+```bash
+git clone https://github.com/kashvigarg/insta_cable_getx.git
+```
+  ##### Move to the root folder
+```bash
+cd \insta_cable
+```
+
+  ##### To run the app, simply write
+```bash
+flutter run
+```
+
+
