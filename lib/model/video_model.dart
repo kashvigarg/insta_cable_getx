@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 // title, description, videoLink,
@@ -6,52 +9,57 @@ import 'dart:convert';
 
 class VideoModel {
   final String title;
+  // final File videoFile;
   final String description;
-  final String videoLink;
-  final String videoId;
+  // final String videoLink;
   final String authorId;
+  final String videoUrl;
   final int numLikes;
   // final Duration videoLength;
-  final String? thumbnail;
+  // final String? thumbnail;
   VideoModel({
     required this.title,
     required this.description,
-    required this.videoLink,
-    required this.videoId,
+    // required this.videoLink,
+    // required this.videoId,
+    // required this.videoFile,
     required this.authorId,
     required this.numLikes,
+    required this.videoUrl,
     // required this.videoLength,
-    this.thumbnail,
+    // this.thumbnail,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'title': title,
-      'description': description,
-      'videoLink': videoLink,
-      'videoId': videoId,
-      'authorId': authorId,
-      'numLikes': numLikes,
+  Map<String, dynamic> ToFirestore() {
+    return {
+      if (title != null) 'title': title,
+      if (description != null) 'description': description,
+      // 'videoFile': videoFile,
+      if (authorId != null) 'authorId': authorId,
+      if (numLikes != null) 'numLikes': numLikes,
+      if (videoUrl != null) 'videoUrl': videoUrl,
       // 'videoLength': videoLength.toMap<String, dynamic>(),
-      'thumbnail': thumbnail,
+      // if (thumbnail!=null) 'thumbnail': thumbnail,
     };
   }
 
-  factory VideoModel.fromMap(Map<String, dynamic> map) {
+  factory VideoModel.fromFireStore(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final map = snapshot.data();
     return VideoModel(
-      title: map['title'] as String,
-      description: map['description'] as String,
-      videoLink: map['videoLink'] as String,
-      videoId: map['videoId'] as String,
-      authorId: map['authorId'] as String,
-      numLikes: map['numLikes'] as int,
+      title: map?['title'] as String,
+      description: map?['description'] as String,
+      // videoFile: map['videoFile'] as File,
+      authorId: map?['authorId'] as String,
+      numLikes: map?['numLikes'] as int,
+      videoUrl: map?['videoUrl'] as String,
       // videoLength: Duration.fromMap(map['videoLength'] as Map<String,dynamic>),
-      thumbnail: map['thumbnail'] != null ? map['thumbnail'] as String : null,
+      // thumbnail: map?['thumbnail'] != null ? map['thumbnail'] as String : null,
     );
   }
 
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
-  factory VideoModel.fromJson(String source) =>
-      VideoModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  // factory VideoModel.fromJson(String source) =>
+  //     VideoModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

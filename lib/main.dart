@@ -1,16 +1,25 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insta_cable/controller/auth_controller.dart';
+import 'package:insta_cable/controller/data_controller.dart';
 import 'package:insta_cable/view/bottom_nav_bar.dart';
 import 'package:insta_cable/view/create_new_reel.dart';
+import 'package:insta_cable/view/reel_screen.dart';
 import 'package:insta_cable/view/upload_screen.dart';
 
 import 'firebase_options.dart';
-import 'view/welcome_screen.dart';
+import 'view/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+  await FirebaseAppCheck.instance.activate(
+    webRecaptchaSiteKey: 'recaptcha-v3-site-key',
+    androidProvider: AndroidProvider.debug,
   );
   runApp(const App());
 }
@@ -20,8 +29,17 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: LandingScreen(),
+    AuthController controller = Get.put(AuthController());
+    DataController dataController = Get.put(DataController());
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              centerTitle: true,
+              foregroundColor: Colors.black,
+              backgroundColor: Colors.transparent,
+              elevation: 0)),
+      home: const Center(child: CircularProgressIndicator()),
     );
   }
 }

@@ -1,34 +1,64 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:insta_cable/controller/auth_controller.dart';
+import 'package:insta_cable/controller/video_controller.dart';
+import 'package:insta_cable/model/video_model.dart';
+import 'package:insta_cable/view/bottom_nav_bar.dart';
+import 'package:insta_cable/view/upload_screen.dart';
+import 'package:video_player/video_player.dart';
 
-class CreateNewReelScreen extends StatelessWidget {
+class CreateNewReelScreen extends StatefulWidget {
   const CreateNewReelScreen({super.key, required this.video});
 
-  final Future<File?> video;
+  final File? video;
+
+  @override
+  State<CreateNewReelScreen> createState() => _CreateNewReelScreenState();
+}
+
+class _CreateNewReelScreenState extends State<CreateNewReelScreen> {
+  late VideoPlayerController controller;
+  final AuthController authController = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    controller = VideoPlayerController.file(widget.video!);
+    controller.initialize().then(
+      (value) {
+        setState(() {
+          controller.play();
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final titleController = TextEditingController();
-    final descController = TextEditingController();
+    final VideoController videoController = Get.put(VideoController());
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const Text("Thumbnail View"),
-              _textField(
-                  controller: titleController, hintText: 'Enter a title'),
-              _textField(
-                  controller: descController, hintText: 'Enter a description')
-            ],
-          ),
-        ),
+            child: Column(
+          children: [
+            AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: VideoPlayer(controller)),
+            _textField(
+                controller: videoController.titleController,
+                hintText: 'Enter a title'),
+            _textField(
+                controller: videoController.descController,
+                hintText: 'Enter a description')
+          ],
+        )),
         appBar: AppBar(
           actions: [
             IconButton(
-                onPressed: () {
-                  // upload
-                  Navigator.of(context).pop();
+                onPressed: () async {
+                  await videoController.uploadToStorage();
+                  Get.off(() => LandingScreen());
                 },
                 icon: const Icon(Icons.send))
           ],
@@ -40,6 +70,12 @@ class CreateNewReelScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
 
