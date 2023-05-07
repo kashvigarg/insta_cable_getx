@@ -10,6 +10,21 @@ class DataController extends GetxController {
 
   int get length => videos.length;
 
+  Future<void> likeToggle(String videoUrl, bool like) async {
+    await db
+        .collection("videos")
+        .where("videoUrl", isEqualTo: videoUrl)
+        .get()
+        .then((value) {
+      for (var docSnapshot in value.docs) {
+        int curr = docSnapshot.data()['numLikes'];
+        docSnapshot
+            .data()
+            .update('numLikes', (value) => like == true ? curr + 1 : curr - 1);
+      }
+    });
+  }
+
   Future<List<VideoModel>> getVideos() async {
     await db.collection("videos").get().then((querySnapshot) {
       for (var docSnapshot in querySnapshot.docs) {

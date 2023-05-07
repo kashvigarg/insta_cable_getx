@@ -57,7 +57,7 @@ class _CreateNewReelScreenState extends State<CreateNewReelScreen> {
           actions: [
             IconButton(
                 onPressed: () async {
-                  await videoController.uploadToStorage();
+                  await videoController.uploadToStorage(widget.video!);
                   Get.off(() => LandingScreen());
                 },
                 icon: const Icon(Icons.send))

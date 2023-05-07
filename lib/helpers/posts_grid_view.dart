@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:insta_cable/constants/app_config.dart';
 import 'package:insta_cable/controller/data_controller.dart';
 import 'package:insta_cable/model/video_model.dart';
 import 'package:video_player/video_player.dart';
@@ -54,31 +55,72 @@ class PostsGridView extends StatelessWidget {
   }
 }
 
-class FullPostView extends StatelessWidget {
+class FullPostView extends StatefulWidget {
   const FullPostView({super.key, required this.post});
 
   final VideoModel post;
+
+  @override
+  State<FullPostView> createState() => _FullPostViewState();
+}
+
+class _FullPostViewState extends State<FullPostView> {
   @override
   Widget build(BuildContext context) {
+    bool liked = false;
     final VideoPlayerController _controller = VideoPlayerController.contentUri(
-        Uri.parse(post.videoUrl),
+        Uri.parse(widget.post.videoUrl),
         videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: true));
     return Card(
-      child: Column(
-        children: [
-          Text(post.title),
-          VideoPlayer(_controller),
-          Text(post.description),
-          IconButton(
-              onPressed: () {},
-              icon: Row(
+      child: Stack(alignment: Alignment.bottomCenter, children: [
+        // VideoPlayer(controller)
+        Container(
+          height: safeHeight * 0.9,
+          color: Colors.green,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Icon(Icons.heart_broken),
-                  Text(post.numLikes.toString())
+                  Text(
+                    widget.post.title,
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                    textScaleFactor: 1.6,
+                  ),
+                  Text(
+                    widget.post.description,
+                    textScaleFactor: 1.3,
+                  ),
                 ],
-              ))
-        ],
-      ),
+              ),
+              IconButton(
+                  alignment: Alignment.bottomRight,
+                  onPressed: () {
+                    setState(() {
+                      liked = !liked;
+                    });
+                    final DataController dataController = Get.find();
+                    bool ans = liked == true ? true : false;
+                    dataController.likeToggle(widget.post.videoUrl, ans);
+                  },
+                  icon: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Icon(
+                        Icons.thumb_up_sharp,
+                        color: Colors.red,
+                      ),
+                      Text(widget.post.numLikes.toString())
+                    ],
+                  ))
+            ],
+          ),
+        )
+      ]),
     );
   }
 }

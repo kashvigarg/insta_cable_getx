@@ -31,19 +31,22 @@ class VideoController extends GetxController {
     return file;
   }
 
-  uploadToStorage() {
+  uploadToStorage(File file) async {
     final uid = authController.firebaseUser.value!.uid;
 
     try {
-      late String downloadUrl;
-      final storageRef = FirebaseStorage.instance.ref('videos/user');
-      final vidRef =
-          storageRef.child(uid).child(DateTime.now().toIso8601String());
+      final metadata = SettableMetadata(contentType: 'video/mp4');
+      final storageRef = FirebaseStorage.instance.ref();
+      final uploadTask = storageRef
+          .child("videos/user/$uid/${file.path}")
+          .putFile(file, metadata);
+      final downloadUrl = await storageRef
+          .child("videos/user/$uid/${file.path}")
+          .getDownloadURL();
+      // final vidRef =
+      //     storageRef.child(uid).child(DateTime.now().toIso8601String());
 
-      UploadTask uploadTask =
-          storageRef.putFile(file!, SettableMetadata(contentType: 'video/mp4'));
-
-      vidRef.getDownloadURL().then((value) => {downloadUrl = value});
+      // vidRef.getDownloadURL().then((value) => {downloadUrl = value});
 
       final VideoModel videoF = VideoModel(
         title: titleController.value.text,
@@ -53,7 +56,6 @@ class VideoController extends GetxController {
         numLikes: 0,
       );
 
-      userVideos.add(videoF);
       uploadData(videoF);
     } catch (e) {
       print(e);
@@ -61,11 +63,9 @@ class VideoController extends GetxController {
   }
 
   Future<void> uploadData(VideoModel video) async {
-    final uid = authController.firebaseUser.value!.uid;
     await FirebaseFirestore.instance
         .collection("videos")
-        .doc()
-        .set(video.ToFirestore());
+        .add(video.ToFirestore());
   }
 
   // fetchVideos() async {

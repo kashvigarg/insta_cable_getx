@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
+import 'package:insta_cable/controller/data_controller.dart';
 import 'package:insta_cable/controller/video_controller.dart';
 import 'package:insta_cable/helpers/posts_grid_view.dart';
 import 'package:insta_cable/helpers/video_picker_helper.dart';
@@ -17,6 +18,7 @@ class UploadScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
     final VideoController videoController = Get.put(VideoController());
+    final DataController dataController = Get.find();
 
     return SafeArea(
       child: Scaffold(

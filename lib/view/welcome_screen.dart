@@ -16,7 +16,6 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
-    final DataController dataController = Get.put(DataController());
     return SafeArea(
         child: Scaffold(
       body: Obx(() => authController.isOtpSent.value == true
