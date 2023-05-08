@@ -5,7 +5,7 @@ import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/get.dart';
 import 'package:insta_cable/controller/data_controller.dart';
-import 'package:insta_cable/controller/video_controller.dart';
+import 'package:insta_cable/controller/upload_controller.dart';
 import 'package:insta_cable/helpers/posts_grid_view.dart';
 import 'package:insta_cable/model/video_model.dart';
 import 'package:video_player/video_player.dart';
@@ -20,6 +20,9 @@ class ReelScreen extends StatelessWidget {
         future: dataController.get(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.data == null) {
+              return Text("Godamnit");
+            }
             if (snapshot.hasData) {
               List<VideoModel> data = snapshot.data as List<VideoModel>;
               return ListView.builder(

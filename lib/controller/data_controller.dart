@@ -29,6 +29,8 @@ class DataController extends GetxController {
     await db.collection("videos").get().then((querySnapshot) {
       for (var docSnapshot in querySnapshot.docs) {
         VideoModel vf = VideoModel(
+            thumbnail:
+                "https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/b1mfd6svjbn9a1tg_1598679873.jpeg",
             title: docSnapshot.data()['title'],
             description: docSnapshot.data()['description'],
             authorId: docSnapshot.data()['authorId'],
@@ -55,14 +57,4 @@ class DataController extends GetxController {
     final data = snapshot.docs.map((e) => VideoModel.fromFireStore(e)).toList();
     return data;
   }
-
-  // FirebaseFirestore.instance.collection("videos").get().then(
-  //     (querySnapshot) {
-  //       print("Successfully completed");
-  //       for (var docSnapshot in querySnapshot.docs) {
-  //         print('${docSnapshot.id} => ${docSnapshot.data()}');
-  //       }
-  //     },
-  //     onError: (e) => print("Error completing: $e"),
-  //   );
 }

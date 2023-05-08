@@ -4,6 +4,7 @@ import 'package:insta_cable/constants/app_config.dart';
 import 'package:insta_cable/controller/data_controller.dart';
 import 'package:insta_cable/model/video_model.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class PostsGridView extends StatelessWidget {
   const PostsGridView({
@@ -65,62 +66,135 @@ class FullPostView extends StatefulWidget {
 }
 
 class _FullPostViewState extends State<FullPostView> {
+  bool liked = false;
+  bool isPressed = false;
+
+  late VideoPlayerController controller;
+  late Future<void> _initializeVideoPlayerFuture;
+  final DataController dataController = Get.find();
+
+  @override
+  void initState() {
+    controller = VideoPlayerController.network(widget.post.videoUrl);
+    _initializeVideoPlayerFuture = controller.initialize().then(
+      (value) {
+        if (mounted) {
+          controller.setLooping(true);
+          controller.play();
+        } else
+          controller.pause();
+      },
+    );
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool liked = false;
-    final VideoPlayerController _controller = VideoPlayerController.contentUri(
-        Uri.parse(widget.post.videoUrl),
-        videoPlayerOptions: VideoPlayerOptions(allowBackgroundPlayback: true));
-    return Card(
-      child: Stack(alignment: Alignment.bottomCenter, children: [
-        // VideoPlayer(controller)
-        Container(
-          height: safeHeight * 0.9,
-          color: Colors.green,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.post.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                    textScaleFactor: 1.6,
-                  ),
-                  Text(
-                    widget.post.description,
-                    textScaleFactor: 1.3,
-                  ),
-                ],
-              ),
-              IconButton(
-                  alignment: Alignment.bottomRight,
-                  onPressed: () {
-                    setState(() {
-                      liked = !liked;
-                    });
-                    final DataController dataController = Get.find();
-                    bool ans = liked == true ? true : false;
-                    dataController.likeToggle(widget.post.videoUrl, ans);
-                  },
-                  icon: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Icon(
-                        Icons.thumb_up_sharp,
-                        color: Colors.red,
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return SizedBox(
+            height: safeHeight * 0.9,
+            child: VisibilityDetector(
+              key: Key(widget.post.videoUrl),
+              onVisibilityChanged: (VisibilityInfo info) {
+                if (info.visibleFraction == 0.5) {
+                  controller.pause();
+                } else {
+                  controller.play();
+                }
+              },
+              child: Listener(
+                onPointerDown: (event) {
+                  setState(() {
+                    isPressed = true;
+                  });
+                  controller.pause();
+                },
+                onPointerUp: (event) {
+                  setState(() {
+                    isPressed = false;
+                  });
+                  controller.play();
+                },
+                child: Card(
+                  child: Stack(alignment: Alignment.bottomCenter, children: [
+                    Center(
+                      child: AspectRatio(
+                          aspectRatio: controller.value.aspectRatio,
+                          child: VideoPlayer(controller)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          isPressed
+                              ? Container()
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      widget.post.title,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textScaleFactor: 1.6,
+                                    ),
+                                    Text(
+                                      widget.post.description,
+                                      textScaleFactor: 1.3,
+                                    ),
+                                  ],
+                                ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  liked = !liked;
+                                });
+                                dataController.likeToggle(
+                                    widget.post.videoUrl, liked);
+                              },
+                              icon: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Icon(
+                                    Icons.thumb_up_sharp,
+                                    color: (liked == true)
+                                        ? Colors.red
+                                        : Colors.grey,
+                                  ),
+                                  Text(
+                                    widget.post.numLikes.toString(),
+                                  )
+                                ],
+                              ))
+                        ],
                       ),
-                      Text(widget.post.numLikes.toString())
-                    ],
-                  ))
-            ],
-          ),
-        )
-      ]),
+                    )
+                  ]),
+                ),
+              ),
+            ),
+          );
+        } else {
+          // If the VideoPlayerController is still initializing, show a
+          // loading spinner.
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }
@@ -139,13 +213,65 @@ class PostThumbnailView extends StatelessWidget {
     return GestureDetector(
       onTap: onTapped,
       child: Image.network(
-        post.videoUrl,
+        post.thumbnail,
         fit: BoxFit.cover,
       ),
     );
   }
 }
 
+// child: Card(
+//         child: Stack(alignment: Alignment.bottomCenter, children: [
+//           // VideoPlayer(controller),
+//           SizedBox(
+//             height: safeHeight * 0.9,
+//             // color: Colors.green,
+//             child: VideoPlayer(controller),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.all(12.0),
+//             child: Row(
+//               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//               children: [
+//                 Column(
+//                   mainAxisAlignment: MainAxisAlignment.start,
+//                   children: [
+//                     Text(
+//                       widget.post.title,
+//                       style: TextStyle(fontWeight: FontWeight.bold),
+//                       textScaleFactor: 1.6,
+//                     ),
+//                     Text(
+//                       widget.post.description,
+//                       textScaleFactor: 1.3,
+//                     ),
+//                   ],
+//                 ),
+//                 IconButton(
+//                     alignment: Alignment.bottomRight,
+//                     onPressed: () {
+//                       setState(() {
+//                         liked = !liked;
+//                       });
+//                       final DataController dataController = Get.find();
+//                       bool ans = liked == true ? true : false;
+//                       dataController.likeToggle(widget.post.videoUrl, ans);
+//                     },
+//                     icon: Row(
+//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                       children: [
+//                         const Icon(
+//                           Icons.thumb_up_sharp,
+//                           color: Colors.red,
+//                         ),
+//                         Text(widget.post.numLikes.toString())
+//                       ],
+//                     ))
+//               ],
+//             ),
+//           )
+//         ]),
+//       ),
 // class PostVideoView extends HookWidget {
 //   final Post post;
 

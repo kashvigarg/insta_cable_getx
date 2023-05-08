@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insta_cable/controller/auth_controller.dart';
-import 'package:insta_cable/controller/video_controller.dart';
+import 'package:insta_cable/controller/upload_controller.dart';
 import 'package:insta_cable/model/video_model.dart';
 import 'package:insta_cable/view/bottom_nav_bar.dart';
 import 'package:insta_cable/view/upload_screen.dart';
@@ -36,7 +36,7 @@ class _CreateNewReelScreenState extends State<CreateNewReelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final VideoController videoController = Get.put(VideoController());
+    final UploadController videoController = Get.put(UploadController());
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
