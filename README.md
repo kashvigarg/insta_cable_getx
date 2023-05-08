@@ -3,8 +3,8 @@
 A Flutter Video Sharing Application.
 
 ## Live Testing 
-1. Try the live demo. 
-2. Watch a sample. 
+1. Leave a text and I'll send you the apk :)
+2. Or watch a sample [here](https://www.canva.com/design/DAFiUgD_rUY/4HXT8w7jVH-A5SO1x2yADQ/watch?utm_content=DAFiUgD_rUY&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
 
 ## Dependencies
 
