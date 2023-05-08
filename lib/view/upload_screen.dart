@@ -1,12 +1,7 @@
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/material.dart';
-import 'package:insta_cable/controller/data_controller.dart';
 import 'package:insta_cable/controller/upload_controller.dart';
-import 'package:insta_cable/helpers/posts_grid_view.dart';
-import 'package:insta_cable/helpers/video_picker_helper.dart';
+import 'package:insta_cable/view/components/posts_grid_view.dart';
 import 'package:insta_cable/view/create_new_reel.dart';
 
 import '../controller/auth_controller.dart';
@@ -18,11 +13,10 @@ class UploadScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final AuthController authController = Get.find();
     final UploadController videoController = Get.put(UploadController());
-    final DataController dataController = Get.find();
 
     return SafeArea(
       child: Scaffold(
-          body: PostsGridView(),
+          body: const PostsGridView(),
           floatingActionButton: FloatingActionButton(
             onPressed: () async {
               final videoFile = await videoController.pickVideo();

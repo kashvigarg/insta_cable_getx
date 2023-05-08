@@ -5,6 +5,8 @@ import 'package:insta_cable/view/bottom_nav_bar.dart';
 import 'package:insta_cable/view/login_screen.dart';
 import 'package:insta_cable/view/welcome_screen.dart';
 
+import '../helpers/show_snackbar.dart';
+
 class AuthController extends GetxController {
   var _auth = FirebaseAuth.instance;
   var isOtpSent = false.obs;
@@ -69,14 +71,7 @@ class AuthController extends GetxController {
   }
 }
 
-void showSnackbar({required String msg, required String submsg}) {
-  GetSnackBar snackbar = GetSnackBar(
-    duration: const Duration(seconds: 30),
-    titleText: Text(msg),
-    messageText: Text(submsg),
-  );
-  Get.showSnackbar(snackbar);
-}
+
 
 // final isLoggedIn = false.obs();
 //   final auth = FirebaseAuth.instance.obs();

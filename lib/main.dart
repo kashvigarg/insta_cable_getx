@@ -4,13 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insta_cable/controller/auth_controller.dart';
 import 'package:insta_cable/controller/data_controller.dart';
-import 'package:insta_cable/view/bottom_nav_bar.dart';
-import 'package:insta_cable/view/create_new_reel.dart';
-import 'package:insta_cable/view/reel_screen.dart';
-import 'package:insta_cable/view/upload_screen.dart';
-
 import 'firebase_options.dart';
-import 'view/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

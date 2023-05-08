@@ -51,14 +51,14 @@ class UploadController extends GetxController {
       // vidRef.getDownloadURL().then((value) => {downloadUrl = value});
 
       final VideoModel videoF = VideoModel(
-        title: titleController.value.text,
-        description: descController.value.text,
-        authorId: uid,
-        videoUrl: downloadUrl,
-        thumbnail:
-            "https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/b1mfd6svjbn9a1tg_1598679873.jpeg",
-        numLikes: 0,
-      );
+          title: titleController.value.text,
+          description: descController.value.text,
+          authorId: uid,
+          videoUrl: downloadUrl,
+          thumbnail:
+              "https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/b1mfd6svjbn9a1tg_1598679873.jpeg",
+          numLikes: 0,
+          isLiked: false);
 
       uploadData(videoF);
     } catch (e) {

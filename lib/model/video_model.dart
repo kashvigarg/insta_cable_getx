@@ -13,6 +13,7 @@ class VideoModel {
   final String authorId;
   final String videoUrl;
   final int numLikes;
+  final bool isLiked;
   final String thumbnail;
   VideoModel(
       {required this.title,
@@ -20,13 +21,15 @@ class VideoModel {
       required this.authorId,
       required this.numLikes,
       required this.videoUrl,
+      required this.isLiked,
       required this.thumbnail});
 
   Map<String, dynamic> toFirestore() {
     return {
       'title': title,
       'description': description,
-      'authorId': authorId ?? "",
+      'authorId': authorId,
+      'isLiked': isLiked,
       'numLikes': numLikes,
       'videoUrl': videoUrl,
       'thumbnail': thumbnail
@@ -42,6 +45,7 @@ class VideoModel {
         authorId: map?['authorId'] as String,
         numLikes: map?['numLikes'] as int,
         videoUrl: map?['videoUrl'] as String,
+        isLiked: map?['isLiked'] as bool,
         thumbnail: map?['thumbnail'] as String);
   }
 }

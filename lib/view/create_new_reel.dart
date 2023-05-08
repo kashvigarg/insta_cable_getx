@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:insta_cable/controller/auth_controller.dart';
 import 'package:insta_cable/controller/upload_controller.dart';
-import 'package:insta_cable/model/video_model.dart';
 import 'package:insta_cable/view/bottom_nav_bar.dart';
-import 'package:insta_cable/view/upload_screen.dart';
 import 'package:video_player/video_player.dart';
 
 class CreateNewReelScreen extends StatefulWidget {
@@ -29,6 +27,7 @@ class _CreateNewReelScreenState extends State<CreateNewReelScreen> {
       (value) {
         setState(() {
           controller.play();
+          controller.setLooping(true);
         });
       },
     );
@@ -58,14 +57,10 @@ class _CreateNewReelScreenState extends State<CreateNewReelScreen> {
             IconButton(
                 onPressed: () async {
                   await videoController.uploadToStorage(widget.video!);
-                  Get.off(() => LandingScreen());
+                  Get.off(() => const LandingScreen());
                 },
                 icon: const Icon(Icons.send))
           ],
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          centerTitle: true,
           title: const Text("Create a new Reel"),
         ),
       ),
