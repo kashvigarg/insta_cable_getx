@@ -14,6 +14,19 @@ A Flutter Video Sharing Application.
 - `cloud_firestore`
 - `firebase_storage` 
 
+## Current features
+- [x] Use phone authentication to login without hassle.
+- [x] Upload videos along with a custom headline, and description (thumbnail required)
+- [x] Track your posts on a display grid, and tap over any thumbnail to view its respective post. 
+- [x] Watch all uploaded videos on a designated reels page (posted by you + others)
+- [x] Press and hold any playing video to pause/mute the content, while the headline and description disappears. 
+- [x] Like/dislike any posted content. 
+
+## Future Scope
+- [ ] Add comment functionality.
+- [ ] Add liked-by-multiple-users functionality.
+- [ ] Auto-generate post thumbnails while the video is being uploaded.
+
 
 ## Local Development
 
@@ -30,5 +43,6 @@ cd \insta_cable
 ```bash
 flutter run
 ```
+
 
 
