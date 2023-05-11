@@ -6,7 +6,7 @@ import 'package:insta_cable/model/video_model.dart';
 class DataController extends GetxController {
   final uid = FirebaseAuth.instance.currentUser!.uid;
   var db = FirebaseFirestore.instance;
-  List<VideoModel> videos = <VideoModel>[].obs;
+  List<DocumentSnapshot<Object?>> videos = <DocumentSnapshot<Object?>>[].obs;
 
   int get length => videos.length;
 
@@ -65,28 +65,40 @@ class DataController extends GetxController {
     });
   }
 
-  Future<List<VideoModel>> getVideos() async {
-    await db.collection("videos").get().then((querySnapshot) {
-      for (var docSnapshot in querySnapshot.docs) {
-        VideoModel vf = VideoModel(
-            thumbnail:
-                "https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/b1mfd6svjbn9a1tg_1598679873.jpeg",
-            title: docSnapshot.data()['title'],
-            description: docSnapshot.data()['description'],
-            authorId: docSnapshot.data()['authorId'],
-            isLiked: docSnapshot.data()['isLiked'],
-            numLikes: docSnapshot.data()['numLikes'],
-            videoUrl: docSnapshot.data()['videoUrl']);
-        videos.add(vf);
-      }
-    });
-    return videos;
+  Future<List<VideoModel>> getNext10() async {
+    int len = videos.length;
+    var lastFetch = videos[len - 1];
+    var snapshot = await db
+        .collection("videos")
+        .startAfterDocument(lastFetch)
+        .limit(10)
+        .get();
+    var data = snapshot.docs.map((e) => VideoModel.fromFireStore(e)).toList();
+    return data;
   }
+  // Future<List<VideoModel>> getVideos() async {
+  //   await db.collection("videos").get().then((querySnapshot) {
+  //     for (var docSnapshot in querySnapshot.docs) {
+  //       VideoModel vf = VideoModel(
+  //           thumbnail:
+  //               "https://img.republicworld.com/republic-prod/stories/promolarge/xhdpi/b1mfd6svjbn9a1tg_1598679873.jpeg",
+  //           title: docSnapshot.data()['title'],
+  //           description: docSnapshot.data()['description'],
+  //           authorId: docSnapshot.data()['authorId'],
+  //           isLiked: docSnapshot.data()['isLiked'],
+  //           numLikes: docSnapshot.data()['numLikes'],
+  //           videoUrl: docSnapshot.data()['videoUrl']);
+  //       videos.add(vf);
+  //     }
+  //   });
+  //   return videos;
+  // }
 
-  Future<List<VideoModel>> get() async {
+  Future<List<VideoModel>> getFirst10() async {
     final snapshot =
-        await FirebaseFirestore.instance.collection("videos").get();
+        await FirebaseFirestore.instance.collection("videos").limit(10).get();
     final data = snapshot.docs.map((e) => VideoModel.fromFireStore(e)).toList();
+    videos = snapshot.docs;
     return data;
   }
 

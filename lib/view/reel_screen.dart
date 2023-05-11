@@ -14,7 +14,7 @@ class ReelScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DataController dataController = Get.put(DataController());
     return FutureBuilder(
-        future: dataController.get(),
+        future: dataController.getFirst10(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             if (snapshot.hasData) {
@@ -28,12 +28,12 @@ class ReelScreen extends StatelessWidget {
               return ListView.builder(
                   itemCount: data.length,
                   itemBuilder: ((context, index) {
-                    if (index % 9 == 0) {
-                      //   for (int i = 0; i < 10; i++) {
-                      //     data.add(temp[i]);
-                      //   }
-                      showSnackbar(msg: "Making API call", submsg: "");
-                    }
+                    // if (index % 9 == 0) {
+                    //   //   for (int i = 0; i < 10; i++) {
+                    //   //     data.add(temp[i]);
+                    //   //   }
+                    //   showSnackbar(msg: "Making API call", submsg: "");
+                    // }
                     return FullPostView(post: data.elementAt(index));
                   }));
             } else if (snapshot.hasError) {
